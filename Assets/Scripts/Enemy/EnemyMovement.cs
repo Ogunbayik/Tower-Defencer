@@ -15,7 +15,7 @@ public class EnemyMovement : MonoBehaviour
     private int movementIndex;
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        
     }
     void Start()
     {
@@ -24,6 +24,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void InitializeMovementPosition()
     {
+        agent = GetComponent<NavMeshAgent>();
         Transform movePosition = GameObject.Find(MOVEMENT_POSITION).transform;
 
         for (int i = 0; i < movePosition.childCount; i++)
