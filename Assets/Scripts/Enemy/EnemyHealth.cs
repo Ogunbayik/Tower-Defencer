@@ -12,4 +12,11 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = enemySO.GetMaxHealth();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<Test>())
+        {
+            SpawnManager.Instance.RemoveAtList(this);
+        }
+    }
 }

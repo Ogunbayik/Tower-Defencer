@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public static SpawnManager Instance { get; private set; }
+
     private enum SpawnState
     {
+        Idle,
+        Spawning,
         Waiting,
-        Spawning
+        Pass
     }
 
     [SerializeField] private Wave[] waves;
+    [SerializeField] private List<EnemyHealth> enemyList;
 
     private SpawnState currentState;
     private float countdownTimer;
@@ -20,6 +25,17 @@ public class SpawnManager : MonoBehaviour
     {
         countdownTimer = 5f;
         spawnCount = 0;
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
 
@@ -27,17 +43,23 @@ public class SpawnManager : MonoBehaviour
     {
         switch(currentState)
         {
-            case SpawnState.Waiting:
+            case SpawnState.Idle:
                 countdownTimer -= Time.deltaTime;
 
                 if (countdownTimer <= 0)
                     currentState = SpawnState.Spawning;
-
                 break;
 
             case SpawnState.Spawning:
                 StartSpawn(waves[0]);
+                break;
+            case SpawnState.Waiting:
+                if (enemyList.Count <= 0)
+                    Debug.Log("Destroyed All Enemies");
 
+                break;
+            case SpawnState.Pass:
+                Debug.Log("Start Next Wave!!");
                 break;
         }
     }
@@ -48,13 +70,17 @@ public class SpawnManager : MonoBehaviour
         {
             if (spawnCount < wave.spawnCount)
             {
-                Debug.Log("Spawned");
+                var enemy = Instantiate(wave.enemies[0]);
+                enemy.transform.position = wave.spawnPoint.position;
+                enemyList.Add(enemy.GetComponent<EnemyHealth>());
+
                 spawnCount++;
                 countdownTimer = wave.delayTimer;
             }
             else
             {
                 Debug.Log("Spawned All Enemies");
+                currentState = SpawnState.Waiting;
             }
         }
         else
@@ -63,7 +89,11 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-
+    public void RemoveAtList(EnemyHealth enemy)
+    {
+        enemyList.Remove(enemy);
+        Destroy(enemy.gameObject);
+    }
 
 
 
