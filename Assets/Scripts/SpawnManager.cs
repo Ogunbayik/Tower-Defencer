@@ -17,14 +17,17 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Wave[] waves;
     [SerializeField] private List<EnemyHealth> enemyList;
 
+    [SerializeField] private float maxStartTimer;
+
     private SpawnState currentState;
-    private float countdownTimer;
-    private int spawnCount;
+    private float spawnTimer;
+    private float startTimer = 0;
+    private int spawnCount = 0;
+    private int waveIndex = 0;
 
     void Start()
     {
-        countdownTimer = 5f;
-        spawnCount = 0;
+        startTimer = maxStartTimer;
 
         if (Instance == null)
         {
@@ -44,29 +47,36 @@ public class SpawnManager : MonoBehaviour
         switch(currentState)
         {
             case SpawnState.Idle:
-                countdownTimer -= Time.deltaTime;
+                if (GameManager.Instance.currentState == GameManager.GameStates.InGame)
+                    startTimer -= Time.deltaTime;
 
-                if (countdownTimer <= 0)
+                if (startTimer <= 0)
+                {
                     currentState = SpawnState.Spawning;
+                    startTimer = maxStartTimer;
+                }
+
                 break;
 
             case SpawnState.Spawning:
-                StartSpawn(waves[0]);
+                StartSpawn(waves[waveIndex]);
                 break;
             case SpawnState.Waiting:
                 if (enemyList.Count <= 0)
-                    Debug.Log("Destroyed All Enemies");
+                {
+                    currentState = SpawnState.Pass;
+                }
 
                 break;
             case SpawnState.Pass:
-                Debug.Log("Start Next Wave!!");
+                
                 break;
         }
     }
 
     private void StartSpawn(Wave wave)
     {
-        if (countdownTimer <= 0)
+        if (spawnTimer <= 0)
         {
             if (spawnCount < wave.spawnCount)
             {
@@ -75,17 +85,17 @@ public class SpawnManager : MonoBehaviour
                 enemyList.Add(enemy.GetComponent<EnemyHealth>());
 
                 spawnCount++;
-                countdownTimer = wave.delayTimer;
+                spawnTimer = wave.delayTimer;
             }
             else
             {
-                Debug.Log("Spawned All Enemies");
+                //Spawned All Enemies
                 currentState = SpawnState.Waiting;
             }
         }
         else
         {
-            countdownTimer -= Time.deltaTime;
+            spawnTimer -= Time.deltaTime;
         }
     }
 
