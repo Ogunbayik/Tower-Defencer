@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -15,9 +16,11 @@ public class SpawnManager : MonoBehaviour
     }
 
     [SerializeField] private Wave[] waves;
+    [SerializeField] private GameObject waveUI;
     [SerializeField] private List<EnemyHealth> enemyList;
 
     [SerializeField] private float maxStartTimer;
+    [SerializeField] private Text startTimerText;
 
     private SpawnState currentState;
     private float spawnTimer;
@@ -28,6 +31,7 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         startTimer = maxStartTimer;
+        startTimerText.text = startTimer.ToString();
 
         if (Instance == null)
         {
@@ -48,11 +52,17 @@ public class SpawnManager : MonoBehaviour
         {
             case SpawnState.Idle:
                 if (GameManager.Instance.currentState == GameManager.GameStates.InGame)
+                {
                     startTimer -= Time.deltaTime;
+
+                    var timer = Mathf.RoundToInt(startTimer);
+                    startTimerText.text = timer.ToString();
+                }
 
                 if (startTimer <= 0)
                 {
                     currentState = SpawnState.Spawning;
+                    waveUI.gameObject.SetActive(false);
                     startTimer = maxStartTimer;
                 }
 
@@ -65,6 +75,7 @@ public class SpawnManager : MonoBehaviour
                 if (enemyList.Count <= 0)
                 {
                     currentState = SpawnState.Pass;
+                    GameManager.Instance.NextWaveButtonActivate(true);
                 }
 
                 break;
@@ -97,6 +108,21 @@ public class SpawnManager : MonoBehaviour
         {
             spawnTimer -= Time.deltaTime;
         }
+    }
+
+    public void TransitionToNextWave()
+    {
+        waveIndex++;
+        ResetSpawnSettings();
+        GameManager.Instance.NextWaveButtonActivate(false);
+    }
+
+    private void ResetSpawnSettings()
+    {
+        spawnCount = 0;
+        startTimer = maxStartTimer;
+        waveUI.SetActive(true);
+        currentState = SpawnState.Idle;
     }
 
     public void RemoveAtList(EnemyHealth enemy)

@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private Button startButton;
+    [SerializeField] private Button nextWaveButton;
+    [SerializeField] private GameObject menuCanvas;
+    [SerializeField] private GameObject inGameCanvas;
 
     public enum GameStates
     {
@@ -32,13 +35,19 @@ public class GameManager : MonoBehaviour
         }
         #endregion
         StartButtonActivate(true);
+        NextWaveButtonActivate(false);
         currentState = GameStates.Start;
+
+        MenuCanvasActivate(true);
+        InGameCanvasActivate(false);
     }
 
     public void StartGame()
     {
         currentState = GameStates.InGame;
         StartButtonActivate(false);
+        MenuCanvasActivate(false);
+        InGameCanvasActivate(true);
     }
 
     private void StartButtonActivate(bool isActive)
@@ -46,4 +55,17 @@ public class GameManager : MonoBehaviour
         startButton.gameObject.SetActive(isActive);
     }
 
+    public void MenuCanvasActivate(bool isActive)
+    {
+        menuCanvas.gameObject.SetActive(isActive);
+    }
+
+    public void InGameCanvasActivate(bool isActive)
+    {
+        inGameCanvas.gameObject.SetActive(isActive);
+    }
+    public void NextWaveButtonActivate(bool isActive)
+    {
+        nextWaveButton.gameObject.SetActive(isActive);
+    }
 }
