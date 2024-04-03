@@ -2,23 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
     private event EventHandler OnDeath;
 
-    private PlayerAttackController playerAttackController;
-
     [SerializeField] private EnemySO enemySO;
+    [SerializeField] private Image fillBar;
 
     private int currentHealth;
-    private void Awake()
-    {
-        playerAttackController = FindObjectOfType<PlayerAttackController>();
-    }
+    private float healthRate;
     void Start()
     {
         currentHealth = enemySO.GetMaxHealth();
+        healthRate = (float)currentHealth / enemySO.GetMaxHealth();
+        fillBar.fillAmount = healthRate;
     }
 
     private void OnEnable()
@@ -49,6 +48,8 @@ public class EnemyHealth : MonoBehaviour
     private void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        healthRate = (float)currentHealth / enemySO.GetMaxHealth();
+        fillBar.fillAmount = healthRate;
     }
 
     private void Dead()
