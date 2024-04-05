@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
-    private event EventHandler OnDeath;
+    public event EventHandler OnDeath;
 
     [SerializeField] private EnemySO enemySO;
     [SerializeField] private Image fillBar;

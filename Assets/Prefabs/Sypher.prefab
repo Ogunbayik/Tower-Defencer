@@ -359,6 +359,7 @@ GameObject:
   - component: {fileID: 1143266477046088073}
   - component: {fileID: 1143266477046088072}
   - component: {fileID: 1143266477046088079}
+  - component: {fileID: -8694803111110116008}
   - component: {fileID: 1143266477046088074}
   - component: {fileID: 7074572791681336209}
   m_Layer: 0
@@ -424,6 +425,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySO: {fileID: 11400000, guid: 382bd89518bd53141a766ce04697d9fa, type: 2}
   nameText: {fileID: 1143266476521791375}
+--- !u!114 &-8694803111110116008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1143266477046088077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c45b6afc87963f4a955e0e100d1be2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deadParticle: {fileID: 8886836170374927344, guid: dca5b820ebc4d3b4f865353412d286a1, type: 3}
 --- !u!195 &1143266477046088074
 NavMeshAgent:
   m_ObjectHideFlags: 0
